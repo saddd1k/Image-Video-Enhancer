@@ -3,8 +3,9 @@
 </p>
 
 ## <div align="center"><b><a href="README.md">English</a> | <a href="README_RU.md">Русский</a></b></div>
-
+[![Python 3.8](https://img.shields.io/badge/python-3.8-blue.svg?logo=python&logoColor=white)](https://www.python.org/downloads/release/python-380/)
 [![Python 3.9](https://img.shields.io/badge/python-3.9-blue.svg?logo=python&logoColor=white)](https://www.python.org/downloads/release/python-390/)
+[![Python 3.10](https://img.shields.io/badge/python-3.10-blue.svg?logo=python&logoColor=white)](https://www.python.org/downloads/release/python-3100/)
 👀[**App demonstration**](#-app-demonstration) **|** 🔧[**Installation**](#-dependencies-and-installation) **|** 🚩[**Updates**](#-updates) **|** 
 
 ---
@@ -102,5 +103,3 @@ To start the program, run the following command: ```python main.py```
 ▶️ [GFPGAN](https://github.com/TencentARC/GFPGAN): Face restoration algorithm <br>
 ▶️ [BasicSR](https://github.com/xinntao/BasicSR):  Image and video restoration toolbox <br>
 ▶️ [RIFE](https://github.com/hzwer/ECCV2022-RIFE): Real-Time Intermediate Flow Estimation for Video Frame Interpolation <br>
-
-

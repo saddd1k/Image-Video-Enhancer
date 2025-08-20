@@ -443,7 +443,10 @@ QCheckBox::indicator:checked {
 
             nvmlInit()
             device_count = torch.cuda.device_count()
-            self.ui.cuda_devices_label.setText(self.tr(f"Количество устройств: {device_count}"))
+            if self.current_lang == "Русский":
+                self.ui.cuda_devices_label.setText(self.tr(f"Количество устройств: {device_count}"))
+            else:
+                self.ui.cuda_devices_label.setText(self.tr(f"Number of devices: {device_count}"))
 
             for i in range(device_count):
                 name = torch.cuda.get_device_name(i)
