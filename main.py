@@ -490,7 +490,10 @@ QCheckBox::indicator:checked {
     def update_presets_list(self):
         self.ui.preset_comboBox.blockSignals(True)
         self.ui.preset_comboBox.clear()
-        self.ui.preset_comboBox.addItem("<Выберите пресет>")
+        if self.current_lang == 'Русский':
+            self.ui.preset_comboBox.addItem("<Выберите пресет>")
+        else:
+            self.ui.preset_comboBox.addItem("<Select preset>")
         model = self.ui.preset_comboBox.model()
         item = model.item(0)
         font = item.font()
@@ -536,7 +539,10 @@ QCheckBox::indicator:checked {
         self.presets[name] = preset
         save_presets(self.presets)
         self.update_presets_list()
-        QMessageBox.information(self, "Готово", f"Пресет '{name}' сохранён.")
+        if self.current_lang == "Русский":
+            QMessageBox.information(self, "Готово", f"Пресет '{name}' сохранён.")
+        else:
+            QMessageBox.information(self, "Done", f"Preset '{name}' saved.")
 
     def remove_selected_preset(self):
         name = self.ui.preset_comboBox.currentText()
