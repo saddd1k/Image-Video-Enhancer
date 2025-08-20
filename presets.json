@@ -1,0 +1,11 @@
+{
+  "paths": {
+    "output_folder_image": "C:/Users/User/Downloads",
+    "output_folder_video": "C:/Users/User/Downloads",
+    "ffmpeg_path": "C:\\Users\\User\\PycharmProjects\\pyqt\\ffmpeg.exe",
+    "language": 0,
+    "theme": "castle",
+    "output_folder_unique": "C:/Users/User/Downloads",
+    "output_folder_interpolate": "C:/Users/User/Downloads"
+  }
+}
