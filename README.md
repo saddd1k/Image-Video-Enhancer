@@ -40,7 +40,7 @@
 - ✅ English and Russian languages support.
 - ✅ Image Upscaling added.
 - ✅ Video Upscaling added.
-- ✅ Variety of Image Enhancement Extensions: .png, .jpg/.jpeg, .webp, .heic, .heif.
+- ✅ Variety of Image Enhancement Extensions: .png, .jpg/.jpeg, .webp, .heic, .heif, .bmp.
 - ✅ Variety of Video Enhancement Extensions: .mp4, .mov, .mkv, .avi, .webm, .gif.
 - ✅ Integrated presets system for image upscaling tab.
 - ✅ Integrated ffmpeg path, output folder, language and theme for "auto save" in presets.
