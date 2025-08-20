@@ -74,7 +74,7 @@ To start the program, run the following command: ```python main.py```
 
 ---
 
-## 👀 Demos
+## 👀 App Demonstration
 
 soon...
 
