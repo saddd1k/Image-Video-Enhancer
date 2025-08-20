@@ -8,6 +8,8 @@
 
 ---
 
+## English
+
 ### ✨ Features
 - High-quality **image upscaling**
 - **Frame interpolation** for smoother videos (e.g., 24 → 48/60 FPS)
