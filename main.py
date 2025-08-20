@@ -799,7 +799,10 @@ QCheckBox::indicator:checked {
         QApplication.quit()
 
     def on_error(self, msg):
-        QMessageBox.critical(self, "Ошибка", msg)
+        if self.current_lang == "Русский":
+            QMessageBox.critical(self, "Ошибка", msg)
+        else:
+            QMessageBox.critical(self, "Error", msg)
         self.ui.start_processing_frames_button.setEnabled(True)
         self.ui.stop_processing_frames_button.setEnabled(False)
         self.ui.start_processing_button.setEnabled(True)
@@ -835,7 +838,10 @@ QCheckBox::indicator:checked {
             if w:
                 w.setParent(None)
         self.loaded_images.clear()
-        self.ui.added_images_label.setText("Статус: ожидание")
+        if self.current_lang == 'Русский':
+            self.ui.added_images_label.setText("Статус: ожидание")
+        else:
+            self.ui.added_images_label.setText("Status: waiting")
 
     def start_ffmpeg_download(self):
         current_lang = self.current_lang
@@ -885,10 +891,16 @@ QCheckBox::indicator:checked {
             if f not in self.loaded_videos:
                 self.loaded_videos.append(f)
         self.ui.input_video_lineEDIT.setText('; '.join(self.loaded_videos))
-        self.ui.status_video_label.setText(f"Добавлено {len(self.loaded_videos)} видео")
+        if self.current_lang == 'Русский':
+            self.ui.status_video_label.setText(f"Добавлено {len(self.loaded_videos)} видео")
+        else:
+            self.ui.status_video_label.setText(f"Added {len(self.loaded_videos)} videos")
 
-    def choose_video_output_dir(self):  
-        folder = QFileDialog.getExistingDirectory(self, "Выберите папку для сохранения видео")
+    def choose_video_output_dir(self):
+        if self.current_lang == 'Русский':
+            folder = QFileDialog.getExistingDirectory(self, "Выберите папку для сохранения видео")
+        else:
+            folder = QFileDialog.getExistingDirectory(self, "Select a folder to save the video")
         if folder:
             self.ui.output_folder_lineEDIT.setText(folder)
 
