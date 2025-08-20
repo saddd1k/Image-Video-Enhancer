@@ -123,9 +123,10 @@ tifffile==2024.8.30
 tokenizers==0.13.3
 tomli==2.2.1
 tomlkit==0.13.3
-torch==1.13.1
-torchaudio==0.13.1
-torchvision==0.14.1
+torch==1.13.1+cu116
+torchvision==0.14.1+cu116
+torchaudio==0.13.1+cu116
+--extra-index-url https://download.pytorch.org/whl/cu116
 tqdm==4.67.1
 transformers==4.32.0
 trove-classifiers==2025.8.6.13
