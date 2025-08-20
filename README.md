@@ -5,7 +5,7 @@
 ## <div align="center"><b><a href="README.md">English</a> | <a href="README_RU.md">Русский</a></b></div>
 
 [![Python 3.9](https://img.shields.io/badge/python-3.9-blue.svg?logo=python&logoColor=white)](https://www.python.org/downloads/release/python-390/)
-👀[**Demos**](#-app-demos) **|** 🔧[**Installation**](#-installation) **|** 🚩[**Updates**](#-updates) **|** 
+👀[**Demos**](#-app-demos) **|** 🔧[**Installation**](#installation) **|** 🚩[**Updates**](#-updates) **|** 
 
 ---
 
