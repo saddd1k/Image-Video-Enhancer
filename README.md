@@ -49,8 +49,8 @@
 
 ## 🔧 Dependencies and Installation
 
-- Python == 3.9
-- PIP >= 24.0
+- Python >=3.8, <=3.10
+- PIP >= 22.0
 
 ---
 
