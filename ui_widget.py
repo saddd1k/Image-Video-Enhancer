@@ -1444,7 +1444,7 @@ class Ui_AI_processer(object):
 
         self.retranslateUi(AI_processer)
 
-        self.main_tab.setCurrentIndex(2)
+        self.main_tab.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(AI_processer)
@@ -1563,9 +1563,9 @@ class Ui_AI_processer(object):
         self.status_video_label_3.setText(QCoreApplication.translate("AI_processer", u"\u0421\u0442\u0430\u0442\u0443\u0441: \u043e\u0436\u0438\u0434\u0430\u043d\u0438\u0435", None))
         self.frames_to_interpolate_label.setText(QCoreApplication.translate("AI_processer", u"\u041a\u043e\u044d\u0444\u0444\u0438\u0446\u0438\u0435\u043d\u0442 \u0434\u043e\u0440\u0438\u0441\u043e\u0432\u043a\u0438 \u043a\u0430\u0434\u0440\u043e\u0432:", None))
         self.frames_to_interpolate_comboBox.setItemText(0, QCoreApplication.translate("AI_processer", u"2x (\u0421\u0442\u0430\u043d\u0434\u0430\u0440\u0442, \u0431\u044b\u0441\u0442\u0440\u0430\u044f \u0441\u043a\u043e\u0440\u043e\u0441\u0442\u044c)", None))
-        self.frames_to_interpolate_comboBox.setItemText(1, QCoreApplication.translate("AI_processer", u"4x (\u0424\u0443\u043d\u043a\u0446\u0438\u043e\u043d\u0430\u043b\u044c\u043d\u043e \u0438 \u043e\u0442\u043d\u043e\u0441\u0438\u0442\u0435\u043b\u044c\u043d\u043e \u0431\u044b\u0441\u0442\u0440\u043e)", None))
-        self.frames_to_interpolate_comboBox.setItemText(2, QCoreApplication.translate("AI_processer", u"6x (\u0412\u044b\u0448\u0435 \u0441\u0440\u0435\u0434\u043d\u0435\u0433\u043e)", None))
-        self.frames_to_interpolate_comboBox.setItemText(3, QCoreApplication.translate("AI_processer", u"8x (\u0422\u0440\u0435\u0431\u043e\u0432\u0430\u0442\u0435\u043b\u044c\u043d\u043e, \u043c\u043d\u043e\u0433\u043e VRAM)", None))
+        self.frames_to_interpolate_comboBox.setItemText(1, QCoreApplication.translate("AI_processer", u"4x", None))
+        self.frames_to_interpolate_comboBox.setItemText(2, QCoreApplication.translate("AI_processer", u"6x", None))
+        self.frames_to_interpolate_comboBox.setItemText(3, QCoreApplication.translate("AI_processer", u"8x", None))
 
         self.output_and_perfomance_groupbox_2.setTitle(QCoreApplication.translate("AI_processer", u"\u041f\u0440\u043e\u0438\u0437\u0432\u043e\u0434\u0438\u0442\u0435\u043b\u044c\u043d\u043e\u0441\u0442\u044c \u0438 \u0412\u044b\u0432\u043e\u0434", None))
         self.format_image_comboBox_4.setItemText(0, QCoreApplication.translate("AI_processer", u"PNG (default)", None))

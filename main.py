@@ -92,8 +92,8 @@ class MainWindow(QMainWindow):
         self.ui.start_processing_frames_button.clicked.connect(self.start_frames_processing)
         self.ui.format_image_comboBox_4.currentTextChanged.connect(self.update_quality_spinbox_state_4)
         self.update_quality_spinbox_state_4(self.ui.format_image_comboBox_4.currentText())
-        self.movie_i2 = QMovie(r"demonstration/I2_slomo_clipped.gif")
-        self.movie_d2 = QMovie(r"demonstration/D2_slomo_clipped.gif")
+        self.movie_i2 = QMovie(r"assets/I2_slomo_clipped.gif")
+        self.movie_d2 = QMovie(r"assets/D2_slomo_clipped.gif")
         self.ui.gifLabelI2.setMovie(self.movie_i2)
         self.ui.gifLabelD2.setMovie(self.movie_d2)
 
@@ -1012,7 +1012,7 @@ QCheckBox::indicator:checked {
         
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    app.setWindowIcon(QIcon("app.png"))
+    app.setWindowIcon(QIcon(r"assets/app.png"))
     window = MainWindow()
     window.show()
     sys.exit(app.exec())
