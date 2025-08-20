@@ -76,7 +76,25 @@ To start the program, run the following command: ```python main.py```
 
 ## 👀 App Demonstration
 
-soon...
+### About (Dark Theme)
+<p>
+  <img src="assets/screenshots/About (dark theme).png">
+</p>
+
+### Frame Generation (Light Theme)
+<p>
+  <img src="assets/screenshots/Frame generation (light theme).png">
+</p>
+
+### Image Processing (Castle Theme)
+<p>
+  <img src="assets/screenshots/Image processing (castle theme).png">
+</p>
+
+### Video Processing (Dark Theme)
+<p>
+  <img src="assets/screenshots/Video processing (dark theme).png">
+</p>
 
 ## 📖 Credits
 
