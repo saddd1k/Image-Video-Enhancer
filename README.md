@@ -81,7 +81,7 @@ To start the program, run the following command: ```python main.py```
 
 ### About (Dark Theme)
 <p>
-  <img src="assets/screenshots/About (dark theme).png">
+  <img src="assets/screenshots/About (dark them).png">
 </p>
 
 ### Frame Generation (Light Theme)
