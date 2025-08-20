@@ -5,8 +5,7 @@
   <a href="#README.md">English</a> | <a href="#README_RU.md">Русский</a>
 </p>
 
-# Image-Video-Enhancer
-Upscaling & interpolating tool
+[![Python 3.9](https://img.shields.io/badge/python-3.9-blue.svg?logo=python&logoColor=white)](https://www.python.org/downloads/release/python-390/)
 
 ---
 
