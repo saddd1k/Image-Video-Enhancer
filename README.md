@@ -23,7 +23,7 @@
 
 ---
 
-### 🚀 Installation
+### Installation
 
 1. Clone repo
 ```bash
