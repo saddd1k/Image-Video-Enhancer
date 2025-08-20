@@ -1,13 +1,10 @@
-Конечно! Вот полный перевод README на русский язык:
-
----
-
 <p align="center">
   <img src="assets/logo.png" height=400>
 </p>
 
 ## <div align="center"><b><a href="README.md">English</a> | <a href="README_RU.md">Русский</a></b></div>
 
+[![LICENSE](https://img.shields.io/github/license/xinntao/basicsr.svg)](https://github.com/xinntao/BasicSR/blob/master/LICENSE.txt)
 [![Python 3.8](https://img.shields.io/badge/python-3.8-blue.svg?logo=python&logoColor=white)](https://www.python.org/downloads/release/python-380/)
 [![Python 3.9](https://img.shields.io/badge/python-3.9-blue.svg?logo=python&logoColor=white)](https://www.python.org/downloads/release/python-390/)
 [![Python 3.10](https://img.shields.io/badge/python-3.10-blue.svg?logo=python&logoColor=white)](https://www.python.org/downloads/release/python-3100/)
