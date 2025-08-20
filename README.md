@@ -33,15 +33,15 @@
 
 ## 🚩 Updates
 
-- ✅ Couple of models was integrated: RealESRGAN_x2plus, RealESRGAN_x4plus, RealESRGAN_x4plus_anime_6B, realesr-animevideov3, GFPGANv1.3.
-- ✅ App contains dark, light and castle themes.
-- ✅ Frame interpolation support **BETA**.
-- ✅ Added Program about.
-- ✅ English and Russian languages support.
-- ✅ Image Upscaling added.
-- ✅ Video Upscaling added.
-- ✅ Variety of Image Enhancement Extensions: .png, .jpg/.jpeg, .webp, .heic, .heif, .bmp.
-- ✅ Variety of Video Enhancement Extensions: .mp4, .mov, .mkv, .avi, .webm, .gif.
+- ✅ A couple of models was integrated: RealESRGAN_x2plus, RealESRGAN_x4plus, RealESRGAN_x4plus_anime_6B, realesr-animevideov3, GFPGANv1.3.
+- ✅ The app contains dark, light and castle themes.
+- ✅ **BETA:** Frame interpolation support.
+- ✅ Added "About" section.
+- ✅ Support for English and Russian languages.
+- ✅ Image upscaling added.
+- ✅ Video upscaling added.
+- ✅ Variety of image enhancement extensions: .png, .jpg/.jpeg, .webp, .heic, .heif, .bmp.
+- ✅ Variety of video enhancement extensions: .mp4, .mov, .mkv, .avi, .webm, .gif.
 - ✅ Integrated presets system for image upscaling tab.
 - ✅ Integrated ffmpeg path, output folder, language and theme for "auto save" in presets.
 
@@ -68,13 +68,15 @@ cd Image-Video-Enhancer
 pip install -r requirements.txt
 ```
 
-3. You can also install exact packages
+---
 
-```bash
-pip install -r exact_requirements.txt
-```
+To start the program, run the following command: ```python main.py```
 
 ---
+
+## 👀 Demos
+
+soon...
 
 ## 📖 Credits
 
