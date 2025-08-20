@@ -1,16 +1,18 @@
 <p align="center">
   <img src="assets/logo.png" alt="Logo" width="400"/>
 </p>
+
+<h1 align="center">
+  <a href="#readme">English</a> | <a href="#readme_ru">Русский</a>
+</h1>
+
 <p align="center">
-  <a href="#english">English</a> | <a href="#Русский">Русский</a>
+  <img src="https://img.shields.io/badge/―-00000000?style=for-the-badge&labelColor=000000&color=000000&logoWidth=0" height="1">
 </p>
 
-# Image-Video-Enhancer
-Upscaling & interpolating tool
+[![Python 3.9](https://img.shields.io/badge/python-3.9-blue.svg?logo=python&logoColor=white)](https://www.python.org/downloads/release/python-390/)
 
 ---
-
-## English
 
 ### ✨ Features
 - High-quality **image upscaling**
