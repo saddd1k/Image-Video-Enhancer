@@ -2,7 +2,7 @@
   <img src="assets/logo.png" alt="Logo" width="400"/>
 </p>
 <p align="center">
-  <a href="#english">English</a> | <a href="#russian">Русский</a>
+  <a href="#english">English</a> | <a href="#Русский">Русский</a>
 </p>
 
 # Image-Video-Enhancer
