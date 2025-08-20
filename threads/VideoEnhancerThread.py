@@ -3,6 +3,7 @@ from PIL import Image, ImageEnhance, ImageFilter
 import numpy as np
 from realesrgan import RealESRGANer
 from basicsr.archs.rrdbnet_arch import RRDBNet
+from realesrgan.archs.srvgg_arch import SRVGGNetCompact
 from gfpgan import GFPGANer
 import pillow_heif
 pillow_heif.register_heif_opener()
@@ -64,17 +65,23 @@ class VideoUpscaleThread(QThread):
                     self.log(f"FPS исходного видео: {fps}")
                 else:
                     self.log(f"FPS of the original video: {fps}")
-                frame_pattern = os.path.join(temp_dir, 'frame_%06d.png')
+                frame_pattern = os.path.join(temp_dir, f'frame_%06d.{format_ext}')
                 if current_lang == "Русский":
                     self.log("Извлечение кадров...")
                 else:
                     self.log("Extracting frames...")
                 extract_cmd = [
-                    self.ffmpeg_path,
-                    '-i', video_path,
-                    '-vsync', '0',
-                    frame_pattern
+                self.ffmpeg_path, '-i', video_path, '-vsync', '0'
                 ]
+
+                fmt = format_ext.lower()
+                if fmt in ('jpg', 'jpeg'):
+                    qscale = max(2, min(31, int(round((31 - 2) * (crf / 51.0) + 2))))
+                    extract_cmd += ['-q:v', str(qscale)]
+                elif fmt == 'webp':
+                    webp_q = max(0, min(100, int(round(100 - (crf / 51.0) * 100))))
+                    extract_cmd += ['-q:v', str(webp_q)]
+                extract_cmd += [frame_pattern]
                 subprocess.run(extract_cmd, check=True)
                 frames = sorted(f for f in os.listdir(temp_dir) if f.startswith('frame_'))
                 if current_lang == "Русский":
@@ -88,19 +95,28 @@ class VideoUpscaleThread(QThread):
                     self.log(f"Detected {len(frames)} frames.")
                 if self.params['do_upscale']:
                     model_path = os.path.join(self.params['model_dir'], model_name)
-                    model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64, num_block=23, num_grow_ch=32, scale=scale)
+                    model_scale = scale
+                    model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64, num_block=23,
+                                    num_grow_ch=32, scale=scale)
                     if model_name == 'RealESRGAN_x4plus_anime_6B.pth':
-                        model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64, num_block=6, num_grow_ch=32, scale=scale)
+                        model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64, num_block=6,
+                                        num_grow_ch=32, scale=4)
+                        model_scale = 4
+                    elif model_name in ('realesr-animevideov3.pth', 'realesr-animevideov3'):
+                        model = SRVGGNetCompact(num_in_ch=3, num_out_ch=3, num_feat=64,
+                                                num_conv=16, upscale=4, act_type='prelu')
+                        model_scale = 4
                     upsampler = RealESRGANer(
-                    scale=scale,
-                    model_path=model_path,
-                    model=model,
-                    tile=256,
-                    tile_pad=10,
-                    pre_pad=0,
-                    half=(self.params.get('half_precision', False) and device.type == 'cuda'),
-                    device=device
-                )
+                        scale=model_scale,
+                        model_path=model_path,
+                        model=model,
+                        tile=256,
+                        tile_pad=10,
+                        pre_pad=0,
+                        half = bool(self.params.get('half_precision', False)) and str(device).startswith('cuda'),
+                        device=device
+                    )
+                    
                 else:
                     upsampler = None
                 if flags.get('better_faces'):
@@ -124,7 +140,6 @@ class VideoUpscaleThread(QThread):
                     if face_enhancer:
                         _, _, output = face_enhancer.enhance(np.array(img)[..., ::-1], has_aligned=False, only_center_face=False, paste_back=True)
                         img = Image.fromarray(output[..., ::-1])
-
                     flags = self.params['flags']
                     if flags.get('noice_remover'):
                         img = img.filter(ImageFilter.GaussianBlur(1))
@@ -195,23 +210,34 @@ class VideoUpscaleThread(QThread):
                 vf_filter_str = ','.join(vf_filters)
 
                 if not is_gif:
-                    cmd += [
-                        '-c:v', vcodec,
-                        '-pix_fmt', 'yuv420p',
-                        '-vf', vf_filter_str,
-                        '-r', str(out_fps),
-                        '-movflags', '+faststart',
-                    ]
+                    if remove_audio:
+                        cmd += [
+                            '-c:v', vcodec,
+                            '-pix_fmt', 'yuv420p',
+                            '-vf', vf_filter_str,
+                            '-r', str(out_fps),
+                            '-movflags', '+faststart',
+                            '-an'
+                        ]
+                    else:
+                        cmd += [
+                            '-i', video_path,
+                            '-map', '0:v:0',
+                            '-map', '1:a:0?',
+                            '-c:v', vcodec,
+                            '-pix_fmt', 'yuv420p',
+                            '-vf', vf_filter_str,
+                            '-r', str(out_fps),
+                            '-movflags', '+faststart',
+                            '-c:a', 'copy'
+                        ]
+                    if isinstance(crf, (int, float)):
+                        cmd += ['-crf', str(int(crf))]
                 else:
                     cmd += ['-loop', '0']
-
                 if self.params.get('remove_metainfo', False):
                     cmd += ['-map_metadata', '-1']
-
                 cmd.append(output_path)
-
-
-
                 subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
                 current_lang = self.current_lang
                 if current_lang == "Русский":
@@ -219,9 +245,7 @@ class VideoUpscaleThread(QThread):
                 else:
                     self.log(f"Done: {output_path}")
                 self.file_done.emit(video_path)
-
             self.finished_all.emit()
-
         except Exception as e:
             self.error.emit(str(e))
         finally:

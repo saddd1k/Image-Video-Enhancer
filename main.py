@@ -689,8 +689,6 @@ QCheckBox::indicator:checked {
             params['model_name'], params['scale'], params['do_upscale'] = 'RealESRGAN_x4plus_anime_6B.pth', 4, True
         elif "4x" in txt:
             params['model_name'], params['scale'], params['do_upscale'] = 'RealESRGAN_x4plus.pth', 4, True
-        elif "8x" in txt:
-            params['model_name'], params['scale'], params['do_upscale'] = 'RealESRGAN_x8.pth', 8, True
         else:
             if self.current_lang == "Русский":
                 QMessageBox.critical(self, "Модель не найдена", "Попробуйте другую.")
@@ -760,12 +758,12 @@ QCheckBox::indicator:checked {
             params['model_name'], params['scale'], params['do_upscale'] = None, 1, False
         elif "2x" in txt:
             params['model_name'], params['scale'], params['do_upscale'] = 'RealESRGAN_x2plus.pth', 2, True
+        elif "3x" in txt and "Anime" in txt:
+            params['model_name'], params['scale'], params['do_upscale'] = 'realesr-animevideov3.pth', 3, True
         elif "4x" in txt and "Anime" in txt:
             params['model_name'], params['scale'], params['do_upscale'] = 'RealESRGAN_x4plus_anime_6B.pth', 4, True
         elif "4x" in txt:
             params['model_name'], params['scale'], params['do_upscale'] = 'RealESRGAN_x4plus.pth', 4, True
-        elif "8x" in txt:
-            params['model_name'], params['scale'], params['do_upscale'] = 'RealESRGAN_x8.pth', 8, True
         else:
             if self.current_lang == "Русский":
                 QMessageBox.critical(self, "Модель не найдена", "Попробуйте другую.")
@@ -959,9 +957,9 @@ QCheckBox::indicator:checked {
         txt_factor = self.ui.frames_to_interpolate_comboBox.currentText().strip()
         if not txt_factor:
             if self.current_lang == 'Русский':
-                QMessageBox.warning(self, "Ошибка", "Выберите множитель кадров (2x, 4x, 6x или 8x).")
+                QMessageBox.warning(self, "Ошибка", "Выберите множитель кадров (2x, 3x или 4x).")
             else:
-                QMessageBox.warning(self, "Error", "Please select a frame multiplier (2x, 4x, 6x, or 8x).")
+                QMessageBox.warning(self, "Error", "Please select a frame multiplier (2x, 3x, or 4x).")
             return
         m = re.match(r"\s*(\d+)\s*x", txt_factor, re.IGNORECASE)
         if m:
