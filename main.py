@@ -1,6 +1,6 @@
-from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QMessageBox, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QInputDialog, QButtonGroup, QStyle
-from PySide6.QtGui import QPixmap, QImage, QMovie, QIcon, QBrush, QPalette
-from PySide6.QtCore import Qt, QTranslator
+from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QMessageBox, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QInputDialog, QButtonGroup
+from PySide6.QtGui import QPixmap, QImage, QMovie, QIcon, QCloseEvent
+from PySide6.QtCore import Qt, QTranslator, QCoreApplication
 from ui_widget import Ui_AI_processer
 from PIL import Image
 from presets import load_last_paths, load_presets, save_last_paths, save_presets
@@ -12,6 +12,7 @@ from themes import *
 import torch, os, sys, re, pywinstyles
 from threads.FrameGeneratingThread import FrameGeneratingThread
 
+EXIT_CODE_REBOOT = -11231351
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -81,7 +82,7 @@ class MainWindow(QMainWindow):
         self.ui.format_image_comboBox_2.currentTextChanged.connect(self.update_quality_spinbox_state_2)
         self.ui.dark_theme_radio.clicked.connect(self.set_dark_theme)
         self.ui.light_theme_radio.clicked.connect(self.set_light_theme)
-        self.ui.castle_theme_radio.clicked.connect(self.set_castle_theme, self.init_glass_mode)
+        self.ui.castle_theme_radio.clicked.connect(self.set_castle_theme)
         self.init_cuda_info()
         self.ui.cuda_update_pushButton.clicked.connect(self.init_cuda_info)
         self.ui.input_video_button_2.clicked.connect(self.choose_videos_to_interpolate)
@@ -101,6 +102,7 @@ class MainWindow(QMainWindow):
         self.movie_i2.start()
         self.movie_d2.start()
         theme = paths.get("theme", "light")
+        self.white = False
         if theme == "dark":
             self.ui.dark_theme_radio.setChecked(True)
             self.set_dark_theme()
@@ -111,7 +113,6 @@ class MainWindow(QMainWindow):
             self.ui.light_theme_radio.setChecked(True)
             self.set_light_theme()
 
-    
     def set_light_theme(self):
         self.set_dark_theme()
         if self.ui.quality_crf_label.text() == 'Качество/CRF (1-51):':
@@ -191,6 +192,10 @@ QGroupBox::title {
 }
 """)
         self.init_cuda_info()
+        if self.ui.theme_pushButton.isChecked():
+            self.white = True
+            pywinstyles.apply_style(self, 'win7')
+            pywinstyles.set_opacity(int(self.winId()), 0.8)
         
     def set_dark_theme(self):
         choose_img_blue = self.choose_img_blue
@@ -247,8 +252,12 @@ QWidget {
         self.ui.theme_pushButton.setStyleSheet(blue_sheet)
         self.ui.stop_processing_frames_button.setStyleSheet(simple_red_sheet)
         self.init_cuda_info()
-        if self.ui.theme_pushButton.isChecked():
-            pywinstyles.apply_style(self, 'aero')
+        if self.white and not self.ui.light_theme_radio.isChecked():
+            if self.ui.theme_pushButton.isChecked():
+                self.restart()
+        if not self.white and not self.ui.light_theme_radio.isChecked():
+            if self.ui.theme_pushButton.isChecked() and not self.ui.light_theme_radio.isChecked():
+                pywinstyles.apply_style(self, 'aero')
 
     def set_castle_theme(self):
         self.ui.choose_images_button.setStyleSheet("""
@@ -332,8 +341,56 @@ QCheckBox::indicator:checked {
         self.ui.theme_pushButton.setStyleSheet(orange_sheet)
         self.ui.stop_processing_frames_button.setStyleSheet(red_sheet)
         self.init_cuda_info()
-        if self.ui.theme_pushButton.isChecked():
+        if self.white:
+            if self.ui.theme_pushButton.isChecked():
+                self.restart()
+        elif self.ui.theme_pushButton.isChecked():
             pywinstyles.apply_style(self, 'aero')
+
+    def restart_to_aero(self):
+        if self.ui.theme_pushButton.isChecked():
+            if self.white == True:
+                pywinstyles.apply_style(self, 'aero')
+                return QCoreApplication.exit(EXIT_CODE_REBOOT)  
+
+    def restart(self):
+        win7_theme_changer = False
+        if not self.ui.theme_pushButton.isChecked() and self.ui.light_theme_radio.isChecked():
+            win7_theme_changer = True
+        if self.current_lang == 'Русский' and not win7_theme_changer:
+            reply = QMessageBox.question(
+                self,
+                "Требуется перезагрузка программы.",
+                "Хотите ли вы применить glass mode?",
+                QMessageBox.Yes | QMessageBox.No,
+                    )
+        elif self.current_lang == 'English' and not win7_theme_changer:
+            reply = QMessageBox.question(
+                self,
+                " Program Restart Required",
+                "Would you like to apply glass mode?",
+                QMessageBox.Yes | QMessageBox.No,
+            )
+        if self.current_lang == 'Русский' and win7_theme_changer:
+            reply = QMessageBox.question(
+                self,
+                "Требуется перезагрузка программы.",
+                "Хотите ли вы убрать nostalgic glass mode?",
+                QMessageBox.Yes | QMessageBox.No,
+            )
+        elif self.current_lang == 'English' and win7_theme_changer:
+            reply = QMessageBox.question(
+                self,
+                "Program Restart Required",
+                "Would you like to remove nostalgic glass mode?",
+                QMessageBox.Yes | QMessageBox.No,
+            )
+        if reply == QMessageBox.Yes:
+                    self.closeEvent(event=QCloseEvent())
+                    if not self.ui.light_theme_radio.isChecked():
+                        self.restart_to_aero()
+                    else:
+                        return QCoreApplication.exit(EXIT_CODE_REBOOT)  
 
     def init_glass_mode(self):
         if self.ui.theme_pushButton.isChecked() and not self.ui.light_theme_radio.isChecked():
@@ -346,6 +403,8 @@ QCheckBox::indicator:checked {
                 self.set_light_theme()
             else:
                 self.set_dark_theme()
+            if not self.ui.theme_pushButton.isChecked() and self.ui.light_theme_radio.isChecked():
+                self.restart()
 
     def get_current_theme(self):
         if self.ui.dark_theme_radio.isChecked():
@@ -1046,9 +1105,20 @@ QCheckBox::indicator:checked {
         else:
             self.ui.image_quality_spinBox_4.setEnabled(False)
         
+def main():
+    exit_code = 0
+    while True:
+        try:
+            app = QApplication(sys.argv)
+        except RuntimeError:
+            app = QApplication.instance()
+        app.setWindowIcon(QIcon(r"assets/app.png"))
+        window = MainWindow()
+        window.show()
+        exit_code = app.exec()
+        if exit_code != EXIT_CODE_REBOOT:
+            break
+    return exit_code
+        
 if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    app.setWindowIcon(QIcon(r"assets/app.png"))
-    window = MainWindow()
-    window.show()
-    sys.exit(app.exec())
+    main()
