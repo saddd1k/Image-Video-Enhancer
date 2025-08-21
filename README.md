@@ -36,6 +36,7 @@
 
 ## 🚩 Updates
 
+- ✅ Capital GUI rework.
 - ✅ A couple of models was integrated: RealESRGAN_x2plus, RealESRGAN_x4plus, RealESRGAN_x4plus_anime_6B, realesr-animevideov3, GFPGANv1.3.
 - ✅ The app contains dark, light and castle themes.
 - ✅ **BETA:** Frame interpolation support.
@@ -47,7 +48,7 @@
 - ✅ Variety of video enhancement extensions: .mp4, .mov, .mkv, .avi, .webm, .gif.
 - ✅ Integrated presets system for image upscaling tab.
 - ✅ Integrated ffmpeg path, output folder, language and theme for "auto save" in presets.
-
+- 
 ---
 
 ## 🔧 Dependencies and Installation
