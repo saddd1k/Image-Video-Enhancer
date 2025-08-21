@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QMessageBox, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QInputDialog, QButtonGroup, QStyle
-from PySide6.QtGui import QPixmap, QImage, QMovie, QIcon
+from PySide6.QtGui import QPixmap, QImage, QMovie, QIcon, QBrush, QPalette
 from PySide6.QtCore import Qt, QTranslator
 from ui_widget import Ui_AI_processer
 from PIL import Image
@@ -9,7 +9,7 @@ from threads.ImageEnhancerThread import ImageUpscaleThread
 from threads.VideoEnhancerThread import VideoUpscaleThread
 from threads.FFmpegDownloadThread import FFmpegDownloadThread
 from themes import *
-import torch, os, sys, re
+import torch, os, sys, re, pywinstyles
 from threads.FrameGeneratingThread import FrameGeneratingThread
 
 
@@ -51,6 +51,7 @@ class MainWindow(QMainWindow):
         self.ui.ffmpeg_path_lineEDIT.setText(paths.get("ffmpeg_path", ""))  
         self.ui.output_folder_lineEDIT_3.setText(paths.get("output_folder_interpolate", ""))
         self.ui.ffmpeg_path_lineEDIT_2.setText(paths.get("ffmpeg_path", ""))
+        self.ui.theme_pushButton.setChecked(paths.get("glass_mode", False))
         self.ui.language_comboBox.setItemData(0, "en_US")
         self.ui.language_comboBox.setItemData(1, "ru_RU")
         self.ui.language_comboBox.currentIndexChanged.connect(self.on_language_changed)
@@ -80,7 +81,7 @@ class MainWindow(QMainWindow):
         self.ui.format_image_comboBox_2.currentTextChanged.connect(self.update_quality_spinbox_state_2)
         self.ui.dark_theme_radio.clicked.connect(self.set_dark_theme)
         self.ui.light_theme_radio.clicked.connect(self.set_light_theme)
-        self.ui.castle_theme_radio.clicked.connect(self.set_castle_theme)
+        self.ui.castle_theme_radio.clicked.connect(self.set_castle_theme, self.init_glass_mode)
         self.init_cuda_info()
         self.ui.cuda_update_pushButton.clicked.connect(self.init_cuda_info)
         self.ui.input_video_button_2.clicked.connect(self.choose_videos_to_interpolate)
@@ -90,16 +91,15 @@ class MainWindow(QMainWindow):
         self.ui.clear_frame_output_button.clicked.connect(self.clear_frames_logs)
         self.ui.stop_processing_frames_button.clicked.connect(self.stop_processing)
         self.ui.start_processing_frames_button.clicked.connect(self.start_frames_processing)
+        self.ui.theme_pushButton.clicked.connect(self.init_glass_mode)
         self.ui.format_image_comboBox_4.currentTextChanged.connect(self.update_quality_spinbox_state_4)
         self.update_quality_spinbox_state_4(self.ui.format_image_comboBox_4.currentText())
         self.movie_i2 = QMovie(r"assets/I2_slomo_clipped.gif")
         self.movie_d2 = QMovie(r"assets/D2_slomo_clipped.gif")
         self.ui.gifLabelI2.setMovie(self.movie_i2)
         self.ui.gifLabelD2.setMovie(self.movie_d2)
-
         self.movie_i2.start()
         self.movie_d2.start()
-
         theme = paths.get("theme", "light")
         if theme == "dark":
             self.ui.dark_theme_radio.setChecked(True)
@@ -191,8 +191,7 @@ QGroupBox::title {
 }
 """)
         self.init_cuda_info()
-
-
+        
     def set_dark_theme(self):
         choose_img_blue = self.choose_img_blue
         if self.ui.quality_crf_label.text() == 'Качество/CRF:':
@@ -245,8 +244,11 @@ QWidget {
         self.ui.output_folder_button_2.setStyleSheet(blue_sheet)
         self.ui.start_processing_frames_button.setStyleSheet(blue_sheet)
         self.ui.clear_frame_output_button.setStyleSheet(blue_sheet)
+        self.ui.theme_pushButton.setStyleSheet(blue_sheet)
         self.ui.stop_processing_frames_button.setStyleSheet(simple_red_sheet)
         self.init_cuda_info()
+        if self.ui.theme_pushButton.isChecked():
+            pywinstyles.apply_style(self, 'aero')
 
     def set_castle_theme(self):
         self.ui.choose_images_button.setStyleSheet("""
@@ -327,8 +329,23 @@ QCheckBox::indicator:checked {
         self.ui.ffmpeg_download_button_2.setStyleSheet(orange_ffmpeg_download)
         self.ui.start_processing_frames_button.setStyleSheet(orange_sheet)
         self.ui.clear_frame_output_button.setStyleSheet(orange_sheet)
+        self.ui.theme_pushButton.setStyleSheet(orange_sheet)
         self.ui.stop_processing_frames_button.setStyleSheet(red_sheet)
         self.init_cuda_info()
+        if self.ui.theme_pushButton.isChecked():
+            pywinstyles.apply_style(self, 'aero')
+
+    def init_glass_mode(self):
+        if self.ui.theme_pushButton.isChecked() and not self.ui.light_theme_radio.isChecked():
+            pywinstyles.apply_style(self, 'aero')
+        else:
+            self.setStyleSheet('')
+            if self.ui.castle_theme_radio.isChecked():
+                self.set_castle_theme()
+            elif self.ui.light_theme_radio.isChecked():
+                self.set_light_theme()
+            else:
+                self.set_dark_theme()
 
     def get_current_theme(self):
         if self.ui.dark_theme_radio.isChecked():
@@ -352,7 +369,6 @@ QCheckBox::indicator:checked {
             self.current_lang = "Русский"
         self.ui.retranslateUi(self)
         self.init_cuda_info()
-
 
     def init_cuda_info(self):
         layout = self.ui.cuda_info_widget.layout()
@@ -484,6 +500,7 @@ QCheckBox::indicator:checked {
             output_vid=self.ui.output_folder_lineEDIT.text(),
             output_interpolate=self.ui.output_folder_lineEDIT_3.text(),
             ffmpeg_path=self.ui.ffmpeg_path_lineEDIT.text(),
+            glass_mode=self.ui.theme_pushButton.isChecked(),
             language=self.ui.language_comboBox.currentIndex(),
             theme=self.get_current_theme()
         )
@@ -609,6 +626,14 @@ QCheckBox::indicator:checked {
         if folder:
             self.ui.output_folder.setText(folder)
 
+    def choose_files(self):
+        files, _ = QFileDialog.getOpenFileNames(
+            self, "Выберите изображения", "",
+            "Images (*.png *.jpg *.jpeg *.bmp *.webp *.heic *.heif)"
+        )
+        if files:
+            self.handle_files(files)
+    
     def handle_files(self, files):
         exts = (".png", ".jpg", ".jpeg", ".bmp", ".webp", ".heic", ".heif")
         for f in files:
@@ -634,14 +659,6 @@ QCheckBox::indicator:checked {
                     self.ui.added_images_label.setText(f"Добавлено {len(self.loaded_images)} изображений")
                 else:
                     self.ui.added_images_label.setText(f"Added {len(self.loaded_images)} images")
-
-    def choose_files(self):
-        files, _ = QFileDialog.getOpenFileNames(
-            self, "Выберите изображения", "",
-            "Images (*.png *.jpg *.jpeg *.bmp *.webp *.heic *.heif)"
-        )
-        if files:
-            self.handle_files(files)
 
     def start_processing(self):
         if not self.ui.output_folder.text():

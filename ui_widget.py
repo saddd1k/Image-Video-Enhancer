@@ -1391,7 +1391,7 @@ class Ui_AI_processer(object):
         self.model_status_badge_label.setStyleSheet(u"")
         self.layoutWidget26 = QWidget(AI_processer)
         self.layoutWidget26.setObjectName(u"layoutWidget26")
-        self.layoutWidget26.setGeometry(QRect(850, 50, 311, 31))
+        self.layoutWidget26.setGeometry(QRect(810, 50, 361, 31))
         self.h_themes_layout = QHBoxLayout(self.layoutWidget26)
         self.h_themes_layout.setObjectName(u"h_themes_layout")
         self.h_themes_layout.setContentsMargins(0, 0, 0, 0)
@@ -1441,6 +1441,34 @@ class Ui_AI_processer(object):
 "    }")
 
         self.h_themes_layout.addWidget(self.castle_theme_radio)
+
+        self.theme_pushButton = QPushButton(self.layoutWidget26)
+        self.theme_pushButton.setObjectName(u"theme_pushButton")
+        sizePolicy1.setHeightForWidth(self.theme_pushButton.sizePolicy().hasHeightForWidth())
+        self.theme_pushButton.setSizePolicy(sizePolicy1)
+        self.theme_pushButton.setStyleSheet(u"QPushButton {\n"
+"    background-color: #7187D8;\n"
+"    color: white;\n"
+"    border: 1px solid #5365B5;\n"
+"    border-radius: 5px;\n"
+"    padding: 5px 12px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: #8A9AF1;  \n"
+"    border-color: #6B81D8;\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: #566CB8; \n"
+"    border-color: #43549D;\n"
+"}\n"
+"")
+        icon = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.UserAvailable))
+        self.theme_pushButton.setIcon(icon)
+        self.theme_pushButton.setCheckable(True)
+
+        self.h_themes_layout.addWidget(self.theme_pushButton)
 
 
         self.retranslateUi(AI_processer)
@@ -1616,5 +1644,6 @@ class Ui_AI_processer(object):
         self.dark_theme_radio.setText(QCoreApplication.translate("AI_processer", u"Dark", None))
         self.light_theme_radio.setText(QCoreApplication.translate("AI_processer", u"Light", None))
         self.castle_theme_radio.setText(QCoreApplication.translate("AI_processer", u"Castle", None))
+        self.theme_pushButton.setText(QCoreApplication.translate("AI_processer", u"Glass mode", None))
     # retranslateUi
 
