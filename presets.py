@@ -36,6 +36,7 @@ def save_last_paths(
     output_vid=None,
     output_interpolate=None,
     ffmpeg_path=None,
+    glass_mode=None,
     language=None,
     theme=None
 ):
@@ -52,6 +53,8 @@ def save_last_paths(
         data["paths"]["output_folder_interpolate"] = output_interpolate
     if ffmpeg_path is not None:
         data["paths"]["ffmpeg_path"] = ffmpeg_path
+    if glass_mode is not None:
+        data["paths"]["glass_mode"] = glass_mode
     if language is not None:
         data["paths"]["language"] = language
     if theme is not None:
