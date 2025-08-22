@@ -62,7 +62,7 @@
 
 1. Clone repo
 ```bash
-git clone https://github.com/Sadddtop/Image-Video-Enhancer.git
+git clone https://github.com/saddd1k/Image-Video-Enhancer.git
 cd Image-Video-Enhancer
 ````
 
