@@ -2,9 +2,6 @@ from PySide6.QtCore import QThread, Signal
 from PIL import Image, ImageEnhance, ImageFilter
 import numpy as np
 import torch, os, sys
-sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'BasicSR'))
-sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'Real-ESRGAN'))
-sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'GFPGAN'))
 from realesrgan import RealESRGANer
 from basicsr.archs.rrdbnet_arch import RRDBNet
 from gfpgan import GFPGANer
