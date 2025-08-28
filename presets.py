@@ -32,7 +32,6 @@ def load_last_paths():
 
 def save_last_paths(
     output_img=None,
-    output_unique=None,
     output_vid=None,
     output_interpolate=None,
     ffmpeg_path=None,

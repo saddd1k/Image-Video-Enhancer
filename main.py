@@ -608,8 +608,7 @@ QCheckBox::indicator:checked {
                 "better_curcuits": self.ui.better_curcuits_button.isChecked(),
                 "dehaze": self.ui.dehaze_button.isChecked(),
                 "jpeg_artifacts_remove": self.ui.jpeg_artifacts_remove_button.isChecked(),
-                "sepia": self.ui.sepia_button.isChecked(),
-                "better_faces": self.ui.better_faces_button.isChecked()
+                "sepia": self.ui.sepia_button.isChecked()
             }
         }
 
@@ -643,7 +642,6 @@ QCheckBox::indicator:checked {
         self.ui.dehaze_button.setChecked(False)
         self.ui.jpeg_artifacts_remove_button.setChecked(False)
         self.ui.sepia_button.setChecked(False)
-        self.ui.better_faces_button.setChecked(False)
         self.ui.format_image_comboBox.setCurrentIndex(0)
         self.ui.image_quality_spinBox.setValue(95)
         self.ui.saturation_lineEDIT.setText("1.0")
@@ -673,7 +671,6 @@ QCheckBox::indicator:checked {
         self.ui.dehaze_button.setChecked(flags["dehaze"])
         self.ui.jpeg_artifacts_remove_button.setChecked(flags["jpeg_artifacts_remove"])
         self.ui.sepia_button.setChecked(flags["sepia"])
-        self.ui.better_faces_button.setChecked(flags["better_faces"])
 
     def choose_output_dir(self):
         if self.current_lang == "Русский":
@@ -771,8 +768,7 @@ QCheckBox::indicator:checked {
                 'better_curcuits': self.ui.better_curcuits_button.isChecked(),
                 'dehaze': self.ui.dehaze_button.isChecked(),
                 'jpeg_artifacts_remove': self.ui.jpeg_artifacts_remove_button.isChecked(),
-                'sepia': self.ui.sepia_button.isChecked(),
-                'better_faces': self.ui.better_faces_button.isChecked()
+                'sepia': self.ui.sepia_button.isChecked()
             }
         }
         txt = self.ui.quality_comboBox_image.currentText()
@@ -845,7 +841,6 @@ QCheckBox::indicator:checked {
                 'dehaze': self.ui.dehaze_button.isChecked(),
                 'jpeg_artifacts_remove': self.ui.jpeg_artifacts_remove_button.isChecked(),
                 'sepia': self.ui.sepia_button.isChecked(),
-                'better_faces': self.ui.better_faces_button.isChecked()
             }
         }
         txt = self.ui.quality_comboBox_video.currentText()
