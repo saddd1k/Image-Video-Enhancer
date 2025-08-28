@@ -48,7 +48,7 @@
 - ✅ Variety of video enhancement extensions: .mp4, .mov, .mkv, .avi, .webm, .gif.
 - ✅ Integrated presets system for image upscaling tab.
 - ✅ Integrated ffmpeg path, output folder, language and theme for "auto save" in presets.
-- 
+
 ---
 
 ## 🔧 Dependencies and Installation
@@ -62,7 +62,7 @@
 
 1. Clone repo
 ```bash
-git clone https://github.com/Sadddtop/Image-Video-Enhancer.git
+git clone https://github.com/saddd1k/Image-Video-Enhancer.git
 cd Image-Video-Enhancer
 ````
 

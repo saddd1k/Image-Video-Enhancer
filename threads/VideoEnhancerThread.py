@@ -4,7 +4,6 @@ import numpy as np
 from realesrgan import RealESRGANer
 from basicsr.archs.rrdbnet_arch import RRDBNet
 from realesrgan.archs.srvgg_arch import SRVGGNetCompact
-from gfpgan import GFPGANer
 import pillow_heif
 pillow_heif.register_heif_opener()
 import subprocess, re, shutil, tempfile, os
@@ -88,7 +87,6 @@ class VideoUpscaleThread(QThread):
                     self.log(f"Кадры извлечены: {len(frames)} файлов")
                 else:
                     self.log(f"Frames extracted: {len(frames)} files")
-                frames = sorted(f for f in os.listdir(temp_dir) if f.startswith('frame_'))
                 if current_lang == "Русский":
                     self.log(f"Обнаружено {len(frames)} кадров.")
                 else:
@@ -119,27 +117,24 @@ class VideoUpscaleThread(QThread):
                     
                 else:
                     upsampler = None
-                if flags.get('better_faces'):
-                    face_enhancer = GFPGANer(
-                        model_path=os.path.join('weights', 'GFPGANv1.3.pth'),
-                        upscale=scale,
-                        arch='clean',
-                        channel_multiplier=2,
-                        bg_upsampler=None
-                    )
-                else:
-                    face_enhancer = None
                 for frame_name in frames:
                     frame_path = os.path.join(temp_dir, frame_name)
-                    img = Image.open(frame_path).convert("RGB")
+                    img = Image.open(frame_path)
+                    alpha = None
+                    if img.mode == "RGBA":
+                        alpha = img.getchannel("A")
+                        img = img.convert("RGB")
+                    else:
+                        img = img.convert("RGB")
+
                     
                     if upsampler:
-                        img_np = np.array(img)[..., ::-1]  # RGB->BGR
+                        img_np = np.array(img)[..., ::-1]
                         output, _ = upsampler.enhance(img_np, outscale=scale)
-                        img = Image.fromarray(output[..., ::-1])  # BGR->RGB
-                    if face_enhancer:
-                        _, _, output = face_enhancer.enhance(np.array(img)[..., ::-1], has_aligned=False, only_center_face=False, paste_back=True)
                         img = Image.fromarray(output[..., ::-1])
+                    if alpha is not None:
+                        img = img.convert("RGBA")
+                        img.putalpha(alpha.resize(img.size, Image.LANCZOS))
                     flags = self.params['flags']
                     if flags.get('noice_remover'):
                         img = img.filter(ImageFilter.GaussianBlur(1))
@@ -196,20 +191,13 @@ class VideoUpscaleThread(QThread):
                     '-start_number', '1',
                     '-i', frame_input,
                 ]
-                if remove_audio and not is_gif:
-                    cmd += ['-i', video_path, '-an']
-
-                vcodec = {
-                    'H.264 (AVC)': 'libx264',
-                    'H.265 (HEVC)': 'libx265',
-                    'AV1': 'libaom-av1'
-                }.get(codec, 'libx264')
                 vf_filters = ['pad=ceil(iw/2)*2:ceil(ih/2)*2']
                 if self.params.get('remove_black_lines', False):
                     vf_filters.insert(0, 'crop=in_w:in_h-80:0:40')
                 vf_filter_str = ','.join(vf_filters)
 
                 if not is_gif:
+                    cmd += ['-i', video_path]
                     if remove_audio:
                         cmd += [
                             '-c:v', vcodec,
@@ -221,7 +209,6 @@ class VideoUpscaleThread(QThread):
                         ]
                     else:
                         cmd += [
-                            '-i', video_path,
                             '-map', '0:v:0',
                             '-map', '1:a:0?',
                             '-c:v', vcodec,

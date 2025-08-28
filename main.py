@@ -1,6 +1,7 @@
 from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QMessageBox, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QInputDialog, QButtonGroup
-from PySide6.QtGui import QPixmap, QImage, QMovie, QIcon, QCloseEvent
+from PySide6.QtGui import QPixmap, QMovie, QIcon, QCloseEvent
 from PySide6.QtCore import Qt, QTranslator, QCoreApplication
+from PIL.ImageQt import ImageQt
 from ui_widget import Ui_AI_processer
 from PIL import Image
 from presets import load_last_paths, load_presets, save_last_paths, save_presets
@@ -11,8 +12,6 @@ from threads.FFmpegDownloadThread import FFmpegDownloadThread
 from themes import *
 import torch, os, sys, re, pywinstyles
 from threads.FrameGeneratingThread import FrameGeneratingThread
-
-EXIT_CODE_REBOOT = -11231351
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -386,11 +385,11 @@ QCheckBox::indicator:checked {
                 QMessageBox.Yes | QMessageBox.No,
             )
         if reply == QMessageBox.Yes:
-                    self.closeEvent(event=QCloseEvent())
-                    if not self.ui.light_theme_radio.isChecked():
-                        self.restart_to_aero()
-                    else:
-                        return QCoreApplication.exit(EXIT_CODE_REBOOT)  
+            self.closeEvent(event=QCloseEvent())
+            if not self.ui.light_theme_radio.isChecked():
+                self.restart_to_aero()
+            else:
+                return QCoreApplication.exit(EXIT_CODE_REBOOT)
 
     def init_glass_mode(self):
         if self.ui.theme_pushButton.isChecked() and not self.ui.light_theme_radio.isChecked():
@@ -565,7 +564,6 @@ QCheckBox::indicator:checked {
         )
         event.accept()
 
-
     def update_presets_list(self):
         self.ui.preset_comboBox.blockSignals(True)
         self.ui.preset_comboBox.clear()
@@ -695,29 +693,41 @@ QCheckBox::indicator:checked {
     
     def handle_files(self, files):
         exts = (".png", ".jpg", ".jpeg", ".bmp", ".webp", ".heic", ".heif")
+        max_preview_side = 100
         for f in files:
-            if f not in self.loaded_images and f.lower().endswith(exts):
+            if f in self.loaded_images or not f.lower().endswith(exts):
+                continue
+            pix = QPixmap()
+            ok = pix.load(f)
+            if not ok:
                 try:
-                    pic = Image.open(f).convert("RGB")
-                except Exception:
-                    if self.current_lang == "Русский":
-                        QMessageBox.warning(self, "Невозможно открыть файл", f)
-                    else:
-                        QMessageBox.warning(self, "Cannot open file", f)
+                    with Image.open(f) as im:
+                        im.thumbnail((2048, 2048), Image.LANCZOS)
+                        if im.mode not in ("RGBA", "RGB"):
+                            im = im.convert("RGBA")
+                        qimage = ImageQt(im)
+                        pix = QPixmap.fromImage(qimage)
+                        ok = not pix.isNull()
+                except Exception as e:
+                    title = "Невозможно открыть файл" if self.current_lang == "Русский" else "Cannot open file"
+                    QMessageBox.warning(self, title, f"{os.path.basename(f)}\n{e}")
                     continue
-                data = pic.tobytes("raw", "RGB")
-                qimg = QImage(data, pic.width, pic.height, QImage.Format_RGB888)
-                pixmap = QPixmap.fromImage(qimg).scaled(100, 100, Qt.KeepAspectRatio, Qt.SmoothTransformation)
-                row = QWidget(); layout = QHBoxLayout(row)
-                lbl_img = QLabel(); lbl_img.setPixmap(pixmap); lbl_img.setFixedSize(100, 100)
-                lbl_name = QLabel(os.path.basename(f))
-                layout.addWidget(lbl_img); layout.addWidget(lbl_name)
-                self.scroll_preview_layout.addWidget(row)
-                self.loaded_images.append(f)
-                if self.current_lang == "Русский":
-                    self.ui.added_images_label.setText(f"Добавлено {len(self.loaded_images)} изображений")
-                else:
-                    self.ui.added_images_label.setText(f"Added {len(self.loaded_images)} images")
+            if not ok or pix.isNull():
+                title = "Невозможно открыть файл" if self.current_lang == "Русский" else "Cannot open file"
+                QMessageBox.warning(self, title, os.path.basename(f))
+                continue
+            preview = pix.scaled(max_preview_side, max_preview_side, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+            row = QWidget()
+            layout = QHBoxLayout(row)
+            lbl_img = QLabel(); lbl_img.setPixmap(preview); lbl_img.setFixedSize(max_preview_side, max_preview_side)
+            lbl_name = QLabel(os.path.basename(f))
+            layout.addWidget(lbl_img); layout.addWidget(lbl_name)
+            self.scroll_preview_layout.addWidget(row)
+            self.loaded_images.append(f)
+            if self.current_lang == "Русский":
+                self.ui.added_images_label.setText(f"Добавлено {len(self.loaded_images)} изображений")
+            else:
+                self.ui.added_images_label.setText(f"Added {len(self.loaded_images)} images")
 
     def start_processing(self):
         if not self.ui.output_folder.text():
@@ -1012,7 +1022,6 @@ QCheckBox::indicator:checked {
         else:
             self.ui.image_quality_spinBox_2.setEnabled(True)    
 
-
     def choose_videos_to_interpolate(self):
         if self.current_lang == 'Русский':
             files, _ = QFileDialog.getOpenFileNames(self, "Выберите файл для интерполяции", "", "Videos (*.mp4 *.avi *.mov *.mkv *.webm *.gif *.png *.jpg *.jpeg *.bmp *.webp *.heic *.heif)")
@@ -1121,4 +1130,5 @@ def main():
     return exit_code
         
 if __name__ == "__main__":
+    EXIT_CODE_REBOOT = -11231351
     main()
