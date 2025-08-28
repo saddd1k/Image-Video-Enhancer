@@ -1525,7 +1525,7 @@ class Ui_AI_processer(object):
         self.quality_video_label.setText(QCoreApplication.translate("AI_processer", u"\u0420\u0435\u0436\u0438\u043c \u043c\u0430\u0441\u0448\u0442\u0430\u0431\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u044f:", None))
         self.quality_comboBox_video.setItemText(0, QCoreApplication.translate("AI_processer", u"No Upscale", None))
         self.quality_comboBox_video.setItemText(1, QCoreApplication.translate("AI_processer", u"2x (Normal)", None))
-        self.quality_comboBox_video.setItemText(2, QCoreApplication.translate("AI_processer", u"3x (Anime, \u0441\u0430\u043c\u044b\u0439 \u0431\u044b\u0441\u0442\u0440\u044b\u0439 \u0438 \u0443\u043d\u0438\u0432\u0435\u0440\u0441\u0430\u043b\u044c\u043d\u044b\u0439)", None))
+        self.quality_comboBox_video.setItemText(2, QCoreApplication.translate("AI_processer", u"4x (Anime Turbo)", None))
         self.quality_comboBox_video.setItemText(3, QCoreApplication.translate("AI_processer", u"4x (Normal)", None))
         self.quality_comboBox_video.setItemText(4, QCoreApplication.translate("AI_processer", u"4x (Anime)", None))
 
@@ -1632,4 +1632,3 @@ class Ui_AI_processer(object):
         self.castle_theme_radio.setText(QCoreApplication.translate("AI_processer", u"Castle", None))
         self.theme_pushButton.setText(QCoreApplication.translate("AI_processer", u"Glass mode", None))
     # retranslateUi
-
