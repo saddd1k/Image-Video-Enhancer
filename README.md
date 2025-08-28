@@ -48,7 +48,7 @@
 - ✅ Variety of video enhancement extensions: .mp4, .mov, .mkv, .avi, .webm, .gif.
 - ✅ Integrated presets system for image upscaling tab.
 - ✅ Integrated ffmpeg path, output folder, language and theme for "auto save" in presets.
-- 
+
 ---
 
 ## 🔧 Dependencies and Installation
