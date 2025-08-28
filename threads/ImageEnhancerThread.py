@@ -47,16 +47,16 @@ class ImageUpscaleThread(QThread):
                     device=device
                 )
 
-                if self.params['flags'].get('better_faces') and GFPGANer:
-                    face_enhancer = GFPGANer(
-                        model_path=os.path.join('weights', 'GFPGANv1.3.pth'),
-                        upscale=sc,
-                        arch='clean',
-                        channel_multiplier=2,
-                        bg_upsampler=None
-                    )
-                else:
-                    face_enhancer = None
+            if self.params['flags'].get('better_faces'):
+                face_enhancer = GFPGANer(
+                    model_path=os.path.join('weights', 'GFPGANv1.3.pth'),
+                    upscale=sc,
+                    arch='clean',
+                    channel_multiplier=2,
+                    bg_upsampler=None
+                )
+            else:
+                face_enhancer = None
 
             def normalize_format(fmt_str):
                 if fmt_str is None:
