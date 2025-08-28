@@ -848,8 +848,8 @@ QCheckBox::indicator:checked {
             params['model_name'], params['scale'], params['do_upscale'] = None, 1, False
         elif "2x" in txt:
             params['model_name'], params['scale'], params['do_upscale'] = 'RealESRGAN_x2plus.pth', 2, True
-        elif "3x" in txt and "Anime" in txt:
-            params['model_name'], params['scale'], params['do_upscale'] = 'realesr-animevideov3.pth', 3, True
+        elif "4x" in txt and "Anime Turbo" in txt:
+            params['model_name'], params['scale'], params['do_upscale'] = 'realesr-animevideov3.pth', 4, True
         elif "4x" in txt and "Anime" in txt:
             params['model_name'], params['scale'], params['do_upscale'] = 'RealESRGAN_x4plus_anime_6B.pth', 4, True
         elif "4x" in txt:
